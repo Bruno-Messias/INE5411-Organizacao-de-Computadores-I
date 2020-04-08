@@ -1,0 +1,35 @@
+.data
+# Arranjo inicializado com elementos N não nulos. O valor de N é provido no relatório.
+_array: .word 3:4	# N palavras com o valor 3
+_size:  .word 4		# tamanho do arranjo(ex. 5)
+.text
+.globl main
+
+main:
+	jal 	clear1	# Salto para o endereço do procedimento
+	li 	$v0, 10	# Exit syscall
+	syscall
+clear1:
+# inicialização dos parâmetros
+	la 	$a0, _array	#Base do array	
+	lw 	$a1, _size
+# Prólogo do laço. Deve conter uma única instrução de inicialização do índice.
+	add	$t0,$zero,$zero #inicializando i ( int i)        
+# Teste, corpo e iteração do laço.	
+Loop1: 	
+#Teste
+	slt 	$t3, $t0, $a1
+	beq 	$t3, $zero, Exit  # Se (i>=size) desvia para Exit
+#Definindo loop:
+#Corpo
+	sll	$t1,$t0,2	#indice i x 4
+	add	$t1,$a0,$t1	#somando a base do arranjo com indice deslocado
+	sw	$zero,0($t1)	#zerando elementos no array( array[i] = 0)
+#Iteração
+	addi	$t0,$t0,1	#incrementar indice i
+	j 	Loop1
+# Epílogo do procedimento
+Exit:
+	jr 	$ra  # Retorna ao programa principal
+
+#7 x N ==> N = 5 = 35

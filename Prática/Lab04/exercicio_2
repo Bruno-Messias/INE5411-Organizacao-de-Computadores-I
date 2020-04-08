@@ -1,0 +1,30 @@
+.data
+# Arranjo inicializado com elementos N não nulos. O valor de N é provido no relatório.
+_array: .word 3:4		# N palavras com o valor 3
+_size: .word 4  		# tamanho do arranjo
+.text
+.globl main
+main:
+	jal 	clear2	# Salto para o endereço do procedimento
+	li 	$v0, 10	# Exit syscall
+	syscall
+clear2:
+# inicialização dos parâmetros
+	la 	$a0, _array
+	lw 	$a1, _size
+# Prólogo do laço. Deve conter uma única instrução de inicialização de p.
+	add	$t0,$zero,$a0     #inicialização do ponteiro -> p aponta para endereço do array    
+# Teste, corpo e iteração do laço.	
+Loop2: 	
+	sw	$zero,0($t0)	#zerando posiçao do array
+	addi	$t0,$t0,4	#incrementando posição de memoria +4
+	sll	$t2,$a1,2	#proxima posiçao de N
+	add	$t2,$a0,$t2	#atualizando o valor de N
+	slt 	$t3, $t0, $t2	#teste de p
+	beq 	$t3, $zero, Exit  # Se (p>=&array[size]) desvia para Exit
+	j 	Loop2
+# Epílogo do procedimento
+Exit:
+	jr 	$ra  # Retorna ao programa principal
+#35 <= N = 5	(7 x N)
+	
